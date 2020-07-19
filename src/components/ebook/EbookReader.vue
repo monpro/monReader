@@ -10,7 +10,7 @@
   global.ePub = Epub
   export default {
     computed: {
-      ...mapGetters(['fileName'])
+      ...mapGetters(['fileName', 'menuVisible'])
     },
     methods: {
       prevPage() {
@@ -20,11 +20,13 @@
       },
       nextPage() {
         if (this.rendition) {
-          this.rendition.next(0)
+          this.rendition.next()
         }
       },
       showTitleAndMenu() {
-        return null
+        this.$store.dispatch('setMenuVisible', !this.menuVisible).then(() => {
+          console.log('set menu', this.menuVisible)
+        })
       },
       initEpub() {
         const baseUrl = 'http://localhost:8081/epub/'
@@ -47,6 +49,7 @@
           } else if (time < 500 && offsetX < -40) {
             this.nextPage()
           } else {
+            console.log('should show')
             this.showTitleAndMenu()
           }
           console.log(offsetX, time)
@@ -62,6 +65,11 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+  .ebook-reader {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 </style>
