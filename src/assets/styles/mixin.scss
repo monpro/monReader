@@ -1,0 +1,32 @@
+$ratio: 375 / 10;
+
+@function pxToRem($px){
+  @return $px / $ratio + rem;
+}
+
+@mixin scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@mixin right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
