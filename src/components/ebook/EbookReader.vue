@@ -18,18 +18,22 @@
           this.hideTitleAndMenu()
         }
       },
+
       nextPage() {
         if (this.rendition) {
           this.rendition.next()
           this.hideTitleAndMenu()
         }
       },
+
       showTitleAndMenu() {
-        this.$store.dispatch('setMenuVisible', !this.menuVisible)
+        this.setMenuVisible(!this.menuVisible)
       },
+
       hideTitleAndMenu() {
-        this.$store.dispatch('setMenuVisible', false)
+        this.setMenuVisible(false)
       },
+
       initEpubBook() {
         const baseUrl = 'http://localhost:8081/epub/'
         const url = baseUrl + this.fileName + '.epub'
@@ -51,16 +55,16 @@
           } else if (time < 500 && offsetX < -40) {
             this.nextPage()
           } else {
-            console.log('should show')
             this.showTitleAndMenu()
           }
           console.log(offsetX, time)
         })
       }
     },
+
     mounted() {
       const fileName = this.$route.params.fileName.split('|').join('/')
-      this.$store.dispatch('setFileName', fileName).then(() => {
+      this.setFileName(fileName).then(() => {
         this.initEpubBook()
       })
     }
