@@ -37,7 +37,12 @@
       }
     },
     methods: {
-      setFontSize(fontSize) {}
+      setFontSize(fontSize) {
+        console.log(fontSize)
+        console.log(this.currentBook)
+        this.setDefaultFontSize(fontSize)
+        this.currentBook.rendition.themes.fontSize(fontSize + 'px')
+      }
     }
   }
 </script>
