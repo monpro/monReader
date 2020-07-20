@@ -26,12 +26,16 @@
         }
       },
 
-      showTitleAndMenu() {
+      toggleTitleAndMenu() {
+        if (this.menuVisible) {
+          this.setSettingVisible(-1)
+        }
         this.setMenuVisible(!this.menuVisible)
       },
 
       hideTitleAndMenu() {
         this.setMenuVisible(false)
+        this.setSettingVisible(-1)
       },
 
       initEpubBook() {
@@ -55,7 +59,7 @@
           } else if (time < 500 && offsetX < -40) {
             this.nextPage()
           } else {
-            this.showTitleAndMenu()
+            this.toggleTitleAndMenu()
           }
           console.log(offsetX, time)
         })
