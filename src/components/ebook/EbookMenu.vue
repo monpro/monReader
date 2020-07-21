@@ -1,27 +1,39 @@
 <template>
-  <transition name="slide-up">
-    <div class="menu-wrapper" :class="{'hide-box-shadow': settingVisible >= 0 || !menuVisible}"
-         v-show="menuVisible">
-      <div class="icon-wrapper" :class="{'selected': settingVisible === 3}">
-        <span class="icon-menu" @click="showSetting(3)"></span>
+  <div>
+    <transition name="slide-up">
+      <div class="menu-wrapper" :class="{'hide-box-shadow': settingVisible >= 0 || !menuVisible}"
+           v-show="menuVisible">
+        <div class="icon-wrapper" :class="{'selected': settingVisible === 3}">
+          <span class="icon-menu" @click="showSetting(3)"></span>
+        </div>
+        <div class="icon-wrapper" :class="{'selected': settingVisible === 2}">
+          <span class="icon-progress" @click="showSetting(2)"></span>
+        </div>
+        <div class="icon-wrapper" :class="{'selected': settingVisible === 1}">
+          <span class="icon-bright" @click="showSetting(1)"></span>
+        </div>
+        <div class="icon-wrapper" :class="{'selected': settingVisible === 0}">
+          <span class="icon-A" @click="showSetting(0)"></span>
+        </div>
       </div>
-      <div class="icon-wrapper" :class="{'selected': settingVisible === 2}">
-        <span class="icon-progress" @click="showSetting(2)"></span>
-      </div>
-      <div class="icon-wrapper" :class="{'selected': settingVisible === 1}">
-        <span class="icon-bright" @click="showSetting(1)"></span>
-      </div>
-      <div class="icon-wrapper" :class="{'selected': settingVisible === 0}">
-        <span class="icon-A" @click="showSetting(0)"></span>
-      </div>
-    </div>
-  </transition>
+    </transition>
+    <ebook-setting-font></ebook-setting-font>
+  </div>
 </template>
 
 <script>
+  import EbookSettingFont from './EbookSettingFont'
   import { ebookMixin } from '../../utils/mixin'
   export default {
-    mixins: [ebookMixin]
+    mixins: [ebookMixin],
+    components: {
+      EbookSettingFont
+    },
+    methods: {
+      showSetting(key) {
+        this.setSettingVisible(key)
+      }
+    }
   }
 </script>
 
