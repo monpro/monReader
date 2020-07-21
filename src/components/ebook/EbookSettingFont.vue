@@ -21,6 +21,16 @@
           <span :style="{fontSize: fontSizeList[fontSizeList.length - 1].fontSize + 'px'}" ref="rightText">A</span>
         </div>
       </div>
+      <div class="setting-font-family" @click="showFontFamilyPopUp">
+        <div class="setting-font-family-text-wrapper">
+          <span class="setting-font-family-test">
+            {{defaultFontFamily}}
+          </span>
+          <span class="setting-font-family-icon-wrapper">
+            <span class="icon-forward"></span>
+          </span>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -42,6 +52,9 @@
         console.log(this.currentBook)
         this.setDefaultFontSize(fontSize)
         this.currentBook.rendition.themes.fontSize(fontSize + 'px')
+      },
+      showFontFamilyPopUp() {
+        console.log('pop up')
       }
     }
   }
