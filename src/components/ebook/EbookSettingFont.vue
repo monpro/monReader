@@ -54,7 +54,7 @@
         this.currentBook.rendition.themes.fontSize(fontSize + 'px')
       },
       showFontFamilyPopUp() {
-        console.log('pop up')
+        this.setFontFamilyVisible(true)
       }
     }
   }
