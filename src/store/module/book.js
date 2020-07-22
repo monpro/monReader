@@ -34,6 +34,9 @@ const book = {
     SET_DEFAULT_FONT_SIZE: (state, fontSize) => {
       state.defaultFontSize = fontSize
     },
+    SET_DEFAULT_FONT_FAMILY: (state, fontFamily) => {
+      state.defaultFontFamily = fontFamily
+    },
     SET_FONT_FAMILY_VISIBLE: (state, visible) => {
       state.fontFamilyVisible = visible
     },
