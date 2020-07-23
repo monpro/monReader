@@ -7,6 +7,7 @@
 <script>
   import Epub from 'epubjs'
   import { ebookMixin } from '../../utils/mixin'
+  import { getFontFamily, getFontSize, saveFontFamily, saveFontSize } from '../../utils/localStorage'
 
   global.ePub = Epub
   export default {
@@ -39,7 +40,24 @@
         this.setSettingVisible(-1)
         this.setFontFamilyVisible(false)
       },
-
+      initFontSize() {
+        const fontSize = getFontSize(this.fileName)
+        if (!fontSize) {
+          saveFontSize(this.fileName, this.defaultFontSize)
+        } else {
+          this.rendition.themes.fontSize(fontSize + 'px')
+          this.setDefaultFontSize(fontSize)
+        }
+      },
+      initFontFamily() {
+        const font = getFontFamily(this.fileName)
+        if (!font) {
+          saveFontFamily(this.fileName, this.defaultFontFamily)
+        } else {
+          this.rendition.themes.font(font)
+          this.setDefaultFontFamily(font)
+        }
+      },
       initEpubBook() {
         const baseUrl = `${process.env.VUE_APP_RESOURCE_URL}/epub/`
         const url = baseUrl + this.fileName + '.epub'
@@ -49,7 +67,10 @@
           width: innerWidth,
           height: innerHeight
         })
-        this.rendition.display()
+        this.rendition.display().then(() => {
+          this.initFontSize()
+          this.initFontFamily()
+        })
         this.rendition.on('touchstart', event => {
           this.touchStartX = event.changedTouches[0].clientX
           this.touchStartTime = event.timeStamp
