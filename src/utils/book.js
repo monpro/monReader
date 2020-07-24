@@ -60,3 +60,27 @@ export function themeList(vue) {
     }
   ]
 }
+
+export function addCss(href) {
+  const link = document.createElement('link')
+  link.setAttribute('rel', 'stylesheet')
+  link.setAttribute('type', 'text/css')
+  link.setAttribute('href', href)
+  document.getElementsByTagName('head')[0].appendChild(link)
+}
+
+export function removeCss(href) {
+  const links = document.getElementsByTagName('link')
+  links.forEach(link => {
+    if (link && link.getAttribute('href') && link.getAttribute('href') === href) {
+      link.parentNode.removeChild(link)
+    }
+  })
+}
+
+export function removeAllCss() {
+  removeCss(`${process.env.VUE_APP_RESOURCE_URL}/theme/theme_gold.css`)
+  removeCss(`${process.env.VUE_APP_RESOURCE_URL}/theme/theme_eye.css`)
+  removeCss(`${process.env.VUE_APP_RESOURCE_URL}/theme/theme_night.css`)
+  removeCss(`${process.env.VUE_APP_RESOURCE_URL}/theme/theme_default.css`)
+}
