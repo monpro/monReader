@@ -19,18 +19,21 @@
     </transition>
     <ebook-setting-font></ebook-setting-font>
     <ebook-setting-font-pop-up></ebook-setting-font-pop-up>
+    <ebook-setting-theme></ebook-setting-theme>
   </div>
 </template>
 
 <script>
   import EbookSettingFont from './EbookSettingFont'
   import EbookSettingFontPopUp from './EbookSettingFontPopUp'
+  import EbookSettingTheme from './EbookSettingTheme'
   import { ebookMixin } from '../../utils/mixin'
   export default {
     mixins: [ebookMixin],
     components: {
       EbookSettingFont,
-      EbookSettingFontPopUp
+      EbookSettingFontPopUp,
+      EbookSettingTheme
     },
     methods: {
       showSetting(key) {

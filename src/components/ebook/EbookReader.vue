@@ -7,7 +7,14 @@
 <script>
   import Epub from 'epubjs'
   import { ebookMixin } from '../../utils/mixin'
-  import { getFontFamily, getFontSize, saveFontFamily, saveFontSize } from '../../utils/localStorage'
+  import {
+    getFontFamily,
+    getFontSize,
+    getTheme,
+    saveFontFamily,
+    saveFontSize,
+    saveTheme
+  } from '../../utils/localStorage'
 
   global.ePub = Epub
   export default {
@@ -49,6 +56,18 @@
           this.setDefaultFontSize(fontSize)
         }
       },
+      async initTheme() {
+        let defaultTheme = getTheme(this.fileName)
+        if (!defaultTheme) {
+          defaultTheme = this.themeList[0].name
+          this.setDefaultTheme(defaultTheme)
+          saveTheme(this.fileName, defaultTheme)
+        }
+        this.themeList.forEach(theme => {
+          this.rendition.themes.register(theme.name, theme.style)
+        })
+        this.rendition.themes.select(defaultTheme)
+      },
       initFontFamily() {
         const font = getFontFamily(this.fileName)
         if (!font) {
@@ -68,6 +87,7 @@
           height: innerHeight
         })
         this.rendition.display().then(() => {
+          this.initTheme()
           this.initFontSize()
           this.initFontFamily()
         })
