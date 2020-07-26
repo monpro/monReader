@@ -4,7 +4,7 @@
       <div class="setting-progress">
         <div class="progress-wrapper">
           <div class="read-time-wrapper">
-            <span class="read-time-text"></span>
+            <span class="read-time-text">{{getReadTimeText()}}</span>
             <span class="icon-forward"></span>
           </div>
           <div class="progress-icon-wrapper" @click="prevSection">
@@ -35,6 +35,7 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
+  import { getReadTime } from '../../utils/localStorage'
   export default {
     computed: {
       getSectionName() {
@@ -62,7 +63,7 @@
       },
       displayProgress() {
         const cfiValue = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-        this.currentBook.rendition.display(cfiValue)
+        this.display(cfiValue)
       },
       updateProgressBackground() {
         this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
@@ -84,15 +85,19 @@
       displaySection() {
         const sectionInfo = this.currentBook.section(this.section)
         if (sectionInfo && sectionInfo.href) {
-          this.currentBook.rendition.display(sectionInfo.href).then(() => {
-            this.updateLocation()
-          })
+          this.display(sectionInfo.href)
         }
       },
-      updateLocation() {
-        const currentLocation = this.currentBook.rendition.currentLocation()
-        const progress = this.currentBook.locations.percentageFromCfi(currentLocation.start.cfi)
-        this.setProgress(Math.floor(progress * 100))
+      getReadTimeText() {
+        return this.$t('book.haveRead').replace('$1', this.getReadTimeByMinute())
+      },
+      getReadTimeByMinute() {
+        const readTime = getReadTime(this.fileName)
+        if (!readTime) {
+          return 0
+        } else {
+          return Math.ceil(readTime / 60)
+        }
       }
     },
     updated() {

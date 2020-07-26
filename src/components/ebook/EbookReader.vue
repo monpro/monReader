@@ -9,7 +9,7 @@
   import { ebookMixin } from '../../utils/mixin'
   import {
     getFontFamily,
-    getFontSize,
+    getFontSize, getLocation,
     getTheme,
     saveFontFamily,
     saveFontSize,
@@ -22,14 +22,18 @@
     methods: {
       prevPage() {
         if (this.rendition) {
-          this.rendition.prev()
+          this.rendition.prev().then(() => {
+            this.updateLocation()
+          })
           this.hideTitleAndMenu()
         }
       },
 
       nextPage() {
         if (this.rendition) {
-          this.rendition.next()
+          this.rendition.next().then(() => {
+            this.updateLocation()
+          })
           this.hideTitleAndMenu()
         }
       },
@@ -82,11 +86,14 @@
           width: innerWidth,
           height: innerHeight
         })
-        this.rendition.display().then(() => {
+
+        const location = getLocation(this.fileName)
+        this.display(location, () => {
           this.initTheme()
           this.initFontSize()
           this.initFontFamily()
           this.initGlobalStyle()
+          this.updateLocation()
         })
         this.rendition.hooks.content.register(contents => {
           contents.addStylesheet(`${process.env.VUE_APP_RESOURCE_URL}/fonts/daysOne.css`)
@@ -125,6 +132,7 @@
           return this.book.locations.generate(750 * (window.innerWidth / 350) *
             (getFontSize(this.fileName) / 16)).then(locations => {
             this.setBookAvailable(true)
+            this.updateLocation()
           })
         })
       }
