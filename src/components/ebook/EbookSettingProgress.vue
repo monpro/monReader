@@ -7,8 +7,8 @@
             <span class="read-time-text"></span>
             <span class="icon-forward"></span>
           </div>
-          <div class="progress-icon-wrapper">
-            <span class="icon-back" @click="prevSection"></span>
+          <div class="progress-icon-wrapper" @click="prevSection">
+            <span class="icon-back"></span>
           </div>
           <input class="progress" type="range"
                  max="100"
@@ -18,8 +18,8 @@
                  :value="progress"
                  :disabled="!bookAvailable"
                  ref="progress">
-          <div class="progress-icon-wrapper">
-            <span class="icon-forward" @click="nextSection"></span>
+          <div class="progress-icon-wrapper" @click="nextSection">
+            <span class="icon-forward"></span>
           </div>
         </div>
         <div class="text-wrapper">
@@ -53,8 +53,26 @@
       updateProgressBackground() {
         this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
       },
-      prevSection() {},
-      nextSection() {}
+      prevSection() {
+        if (this.section > 0 && this.bookAvailable) {
+          this.setSection(this.section - 1).then(() => {
+            this.displaySection()
+          })
+        }
+      },
+      nextSection() {
+        if (this.section < this.currentBook.spine.length - 1 && this.bookAvailable) {
+          this.setSection(this.section + 1).then(() => {
+            this.displaySection()
+          })
+        }
+      },
+      displaySection() {
+        const sectionInfo = this.currentBook.section(this.section)
+        if (sectionInfo && sectionInfo.href) {
+          this.currentBook.rendition.display(sectionInfo.href)
+        }
+      }
     },
     updated() {
       this.updateProgressBackground()
