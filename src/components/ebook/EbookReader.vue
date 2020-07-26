@@ -110,6 +110,7 @@
           } else {
             this.toggleTitleAndMenu()
           }
+          event.preventDefault()
           event.stopPropagation()
         })
       },
