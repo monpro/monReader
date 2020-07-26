@@ -10,11 +10,36 @@
   import EbookReader from '../../components/ebook/EbookReader'
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
+  import { ebookMixin } from '../../utils/mixin'
+  import { getReadTime, saveReadTime } from '../../utils/localStorage'
   export default {
+    mixins: [ebookMixin],
     components: {
       EbookReader,
       EbookTitle,
       EbookMenu
+    },
+    methods: {
+      startRecordTime() {
+        let readTime = getReadTime(this.fileName)
+        if (!readTime) {
+          readTime = 0
+        }
+        this.task = setInterval(() => {
+          readTime += 1
+          if (readTime % 30 === 0) {
+            saveReadTime(this.fileName, readTime)
+          }
+        }, 1000)
+      }
+    },
+    mounted() {
+      this.startRecordTime()
+    },
+    beforeDestroy() {
+      if (this.task) {
+        clearInterval(this.task)
+      }
     }
   }
 </script>
