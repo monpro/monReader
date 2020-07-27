@@ -4,8 +4,21 @@
       <transition name="slide-right">
         <div class="content">
           <div class="content-page-wrapper">
-            <div class="content-page"></div>
-            <div class="content-page-tab"></div>
+            <div class="content-page">
+              <component :is="currentTab === 1 ? content: bookmark"></component>
+            </div>
+            <div class="content-page-tab">
+              <div class="content-page-tab-item"
+                   :class="{'selected': currentTab === 1}"
+                    @click="selectTab(1)">
+                {{$t('book.navigation')}}
+              </div>
+              <div class="content-page-tab-item"
+                   :class="{'selected': currentTab === 2}"
+                   @click="selectTab(2)">
+                {{$t('book.bookmark')}}
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -16,11 +29,19 @@
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
+  import EbookSlideContents from './EbookSlideContents'
   export default {
     mixins: [ebookMixin],
+    data() {
+      return {
+        currentTab: 1,
+        content: EbookSlideContents,
+        bookmark: null
+      }
+    },
     methods: {
-      hide() {
-
+      selectTab(tab) {
+        this.currentTab = tab
       }
     }
   }
@@ -41,11 +62,25 @@
       width: 85%;
       height: 100%;
       .content-page-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
         .content-page {
-
+          flex: 1;
+          width: 100%;
+          overflow: hidden;
         }
         .content-page-tab {
-
+          display: flex;
+          flex: 0 0 pxToRem(48);
+          height: pxToRem(48);
+          width: 100%;
+          &-item {
+            flex: 1;
+            font-size: pxToRem(12);
+            @include center;
+          }
         }
       }
     }
