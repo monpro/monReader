@@ -115,6 +115,16 @@
           event.stopPropagation()
         })
       },
+      parseBook() {
+        this.book.loaded.cover.then(cover => {
+          this.book.archive.createUrl(cover).then(url => {
+            this.setCover(url)
+          })
+        })
+        this.book.loaded.metadata.then(metadata => {
+          this.setMetadata(metadata)
+        })
+      },
       initEpubBook() {
         const baseUrl = `${process.env.VUE_APP_RESOURCE_URL}/epub/`
         const url = baseUrl + this.fileName + '.epub'
@@ -122,6 +132,7 @@
         this.setCurrentBook(this.book)
         this.initRendition()
         this.initGestrue()
+        this.parseBook()
         this.book.ready.then(() => {
           return this.book.locations.generate(750 * (window.innerWidth / 350) *
             (getFontSize(this.fileName) / 16)).then(locations => {

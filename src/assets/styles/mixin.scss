@@ -37,3 +37,12 @@ $ratio: 375 / 10;
   white-space: nowrap;
 }
 
+@mixin ellipsisWithHeight($lineHeight) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lineHeight;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
