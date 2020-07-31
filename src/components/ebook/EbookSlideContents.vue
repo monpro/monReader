@@ -8,13 +8,14 @@
         <input type="text"
                class="slide-contents-search-input"
                :placeholder="$t('book.searchHint')"
+               v-model="searchText"
                @click="showSearchPage">
       </div>
       <div class="slide-contents-search-cancel" v-if="searchVisible"
            @click="hideSearchPage">{{$t('book.cancel')}}
       </div>
     </div>
-    <div class="slide-contents-book-wrapper">
+    <div class="slide-contents-book-wrapper" v-show="!searchVisible">
       <div class="slide-contents-book-img-wrapper">
         <img :src="cover" class="slide-contents-book-img">
       </div>
@@ -33,13 +34,21 @@
     <Scroll class="slide-contents-list"
             :top="156"
             :bottom="48"
-            ref="scroll">
+            v-show="!searchVisible">
       <div class="slide-contents-item" v-for="(item, index) in navigation" :key="index">
         <span class="slide-contents-item-label"
               :class="{'selected': section === index}"
               :style="getItemStyle(item)"
               @click="displayAndHideTitle(item.href)">{{item.label}}</span>
         <span class="slide-contents-item-page"></span>
+      </div>
+    </Scroll>
+    <Scroll class="slide-search-list"
+            :top="66"
+            :bottom="48"
+            v-show="searchVisible">
+      <div class="slide-search-item" v-for="(item, index) in searchList" :key="index">
+        {{item.excerpt}}
       </div>
     </Scroll>
   </div>
@@ -57,7 +66,9 @@
     },
     data() {
       return {
-        searchVisible: false
+        searchVisible: false,
+        searchList: null,
+        searchText: ''
       }
     },
     methods: {
@@ -71,12 +82,24 @@
       },
       hideSearchPage() {
         this.searchVisible = false
+        this.searchText = ''
+        this.searchList = null
       },
       getItemStyle(item) {
         return {
           marginLeft: `${pxToRem(item.level * 15)}rem`
         }
+      },
+      doSearch(q) {
+        return Promise.all(
+          this.currentBook.spine.spineItems.map(item => item.load(this.currentBook.load.bind(this.currentBook)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
+        ).then(results => Promise.resolve([].concat.apply([], results)))
       }
+    },
+    mounted() {
+      this.doSearch('add').then(list => {
+        this.searchList = list
+      })
     }
   }
 </script>
@@ -189,6 +212,17 @@
         }
         .slide-contents-item-page {
         }
+      }
+    }
+    .slide-search-list {
+      padding: 0 pxToRem(15);
+      box-sizing: border-box;
+      width: 100%;
+      .slide-search-item {
+        font-size: pxToRem(15);
+        line-height: pxToRem(16);
+        padding: pxToRem(20) 0;
+        box-sizing: border-box;
       }
     }
   }
