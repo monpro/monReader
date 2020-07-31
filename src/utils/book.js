@@ -101,5 +101,5 @@ export function flatten(array) {
 }
 
 export function find(item, navs, level = 0) {
-  return !item.parent ? level : find(navs.filter(parentItem => parentItem.id === item.parent)[0], navs, level++)
+  return !item.parent ? level : find(navs.filter(parentItem => parentItem.id === item.parent)[0], navs, ++level)
 }
