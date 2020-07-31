@@ -48,7 +48,11 @@
             :top="66"
             :bottom="48"
             v-show="searchVisible">
-      <div class="slide-search-item" v-for="(item, index) in searchList" :key="index" v-html="item.excerpt"></div>
+      <div class="slide-search-item"
+           v-for="(item, index) in searchList"
+           :key="index"
+           v-html="item.excerpt"
+           @click="displayContent(item.cfi, true)"></div>
     </Scroll>
   </div>
 </template>
@@ -74,6 +78,13 @@
       displayAndHideTitle(target) {
         this.display(target, () => {
           this.hideTitleAndMenu()
+        })
+      },
+      displayContent(target, highlight = false) {
+        this.display(target, () => {
+          this.hideTitleAndMenu()
+          if (highlight) {}
+            this.currentBook.rendition.annotations.highlight(target)
         })
       },
       showSearchPage() {
