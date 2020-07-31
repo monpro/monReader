@@ -15,6 +15,7 @@
     saveFontSize,
     saveTheme
   } from '../../utils/localStorage'
+  import { find, flatten } from '../../utils/book'
 
   global.ePub = Epub
   export default {
@@ -123,6 +124,12 @@
         })
         this.book.loaded.metadata.then(metadata => {
           this.setMetadata(metadata)
+        })
+        this.book.loaded.navigation.then(nav => {
+          const navs = flatten(nav.toc)
+          navs.forEach(item => {
+            item.level = find(item, navs)
+          })
         })
       },
       initEpubBook() {
