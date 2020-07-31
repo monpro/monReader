@@ -8,6 +8,7 @@
         <input type="text"
                class="slide-contents-search-input"
                :placeholder="$t('book.searchHint')"
+               @keyup.enter.exact="search()"
                v-model="searchText"
                @click="showSearchPage">
       </div>
@@ -47,9 +48,7 @@
             :top="66"
             :bottom="48"
             v-show="searchVisible">
-      <div class="slide-search-item" v-for="(item, index) in searchList" :key="index">
-        {{item.excerpt}}
-      </div>
+      <div class="slide-search-item" v-for="(item, index) in searchList" :key="index" v-html="item.excerpt"></div>
     </Scroll>
   </div>
 </template>
@@ -94,12 +93,17 @@
         return Promise.all(
           this.currentBook.spine.spineItems.map(item => item.load(this.currentBook.load.bind(this.currentBook)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
         ).then(results => Promise.resolve([].concat.apply([], results)))
+      },
+      search() {
+        if (this.searchText && this.searchText.length > 0) {
+          this.doSearch(this.searchText).then(list => {
+            this.searchList = list
+            this.searchList.forEach(item => {
+              item.excerpt = item.excerpt.replace(this.searchText, `<span class="content-search-text">${this.searchText}</span>`)
+            })
+          })
+        }
       }
-    },
-    mounted() {
-      this.doSearch('add').then(list => {
-        this.searchList = list
-      })
     }
   }
 </script>
