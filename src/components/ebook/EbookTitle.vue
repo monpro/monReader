@@ -24,9 +24,7 @@
   export default {
     mixins: [ebookMixin],
     methods: {
-      back() {
-        console.log('back')
-      }
+      back() {}
     }
   }
 </script>
