@@ -39,9 +39,10 @@
     computed: {
       getSectionName() {
         if (this.section) {
-          const sectionInfo = this.currentBook.section(this.section)
-          if (sectionInfo && sectionInfo.href) {
-            return this.currentBook.navigation.get(sectionInfo.href).label
+          const section = this.currentBook.section(this.section)
+          if (section && section.href && this.currentBook && this.currentBook.navigation) {
+            // return this.currentBook.navigation.get(section.href).label
+            return this.navigation[this.section].label
           }
         }
         return ''

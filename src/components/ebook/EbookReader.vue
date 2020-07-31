@@ -130,6 +130,7 @@
           navs.forEach(item => {
             item.level = find(item, navs)
           })
+          this.setNavigation(navs)
         })
       },
       initEpubBook() {

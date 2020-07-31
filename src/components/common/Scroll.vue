@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { realPx } from '@/utils/utils'
+  import { getCurPx } from '../../utils/utils'
 
   export default {
     props: {
@@ -41,7 +41,7 @@
       },
       refresh() {
         if (this.$refs.scrollWrapper) {
-          this.$refs.scrollWrapper.style.height = window.innerHeight - realPx(this.top) - realPx(this.bottom) + 'px'
+          this.$refs.scrollWrapper.style.height = window.innerHeight - getCurPx(this.top) - getCurPx(this.bottom) + 'px'
           this.$refs.scrollWrapper.addEventListener('scroll', this.handleScroll)
         }
       }
@@ -50,7 +50,7 @@
       this.refresh()
       this.$nextTick(() => {
         setTimeout(() => {
-          this.scrollTo(realPx(this.initPosition.x), realPx(this.initPosition.y))
+          this.scrollTo(getCurPx(this.initPosition.x), getCurPx(this.initPosition.y))
         }, 1)
       })
     }

@@ -8,10 +8,11 @@
         <input type="text"
                class="slide-contents-search-input"
                :placeholder="$t('book.searchHint')"
-                @click="showSearchPage">
+               @click="showSearchPage">
       </div>
       <div class="slide-contents-search-cancel" v-if="searchVisible"
-      @click="hideSearchPage">{{$t('book.cancel')}}</div>
+           @click="hideSearchPage">{{$t('book.cancel')}}
+      </div>
     </div>
     <div class="slide-contents-book-wrapper">
       <div class="slide-contents-book-img-wrapper">
@@ -29,25 +30,52 @@
         <div class="slide-contents-book-time">{{getReadTimeText(this.fileName)}}</div>
       </div>
     </div>
+    <Scroll class="slide-contents-list"
+            :top="156"
+            :bottom="48"
+            ref="scroll">
+      <div class="slide-contents-item" v-for="(item, index) in navigation" :key="index">
+        <span class="slide-contents-item-label"
+              :class="{'selected': section === index}"
+              :style="getItemStyle(item)"
+              @click="displayAndHideTitle(item.href)">{{item.label}}</span>
+        <span class="slide-contents-item-page"></span>
+      </div>
+    </Scroll>
   </div>
 </template>
 
 <script>
   import { ebookMixin } from '../../utils/mixin'
+  import Scroll from '../common/Scroll'
+  import { pxToRem } from '../../utils/utils'
 
   export default {
     mixins: [ebookMixin],
+    components: {
+      Scroll
+    },
     data() {
       return {
         searchVisible: false
       }
     },
     methods: {
+      displayAndHideTitle(target) {
+        this.display(target, () => {
+          this.hideTitleAndMenu()
+        })
+      },
       showSearchPage() {
         this.searchVisible = true
       },
       hideSearchPage() {
         this.searchVisible = false
+      },
+      getItemStyle(item) {
+        return {
+          marginLeft: `${pxToRem(item.level * 15)}rem`
+        }
       }
     }
   }
@@ -143,6 +171,23 @@
         }
         .slide-contents-book-time {
           font-size: pxToRem(12);
+        }
+      }
+    }
+    .slide-contents-list {
+      padding: 0 pxToRem(15);
+      box-sizing: border-box;
+      .slide-contents-item {
+        display: flex;
+        padding: pxToRem(20) 0;
+        box-sizing: border-box;
+        .slide-contents-item-label {
+          flex: 1;
+          font-size: pxToRem(15);
+          line-height: pxToRem(17);
+          @include ellipsis;
+        }
+        .slide-contents-item-page {
         }
       }
     }

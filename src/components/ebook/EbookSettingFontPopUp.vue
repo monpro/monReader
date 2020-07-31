@@ -25,7 +25,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { FONT_FAMILY } from '../../utils/book'
-  import { setLocalStorage, getLocalStorage, saveFontFamily } from '../../utils/localStorage'
+  import { setLocalStorage, saveFontFamily } from '../../utils/localStorage'
 
   export default {
     mixins: [ebookMixin],
@@ -52,7 +52,6 @@
     },
     mounted() {
       setLocalStorage(this.fileName, this.defaultFontFamily)
-      console.log(getLocalStorage(this.fileName))
     }
   }
 </script>
