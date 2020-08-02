@@ -3,6 +3,7 @@
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
+    <ebook-bookmark></ebook-bookmark>
   </div>
 </template>
 
@@ -10,6 +11,7 @@
   import EbookReader from '../../components/ebook/EbookReader'
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
+  import EbookBookmark from '../../components/ebook/EbookBookmark'
   import { ebookMixin } from '../../utils/mixin'
   import { getReadTime, saveReadTime } from '../../utils/localStorage'
   export default {
@@ -17,7 +19,8 @@
     components: {
       EbookReader,
       EbookTitle,
-      EbookMenu
+      EbookMenu,
+      EbookBookmark
     },
     methods: {
       startRecordTime() {
@@ -53,10 +56,12 @@
     },
     watch: {
       offsetY(value) {
-        if (value > 0) {
-          this.move(value)
-        } else if (value === 0) {
-          this.restore()
+        if (!this.menuVisible && this.bookAvailable) {
+          if (value > 0) {
+            this.move(value)
+          } else if (value === 0) {
+            this.restore()
+          }
         }
       }
     }
@@ -69,6 +74,8 @@
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
   }
