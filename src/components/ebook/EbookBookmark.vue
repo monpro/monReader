@@ -1,5 +1,5 @@
 <template>
-  <div class="ebook-bookmark">
+  <div class="ebook-bookmark" ref="bookmark">
     <div class="ebook-bookmark-text-wrapper">
       <div class="ebook-bookmark-down-wrapper">
         <span class="icon-down"></span>
@@ -9,17 +9,44 @@
       </div>
     </div>
     <div class="ebook-bookmark-icon-wrapper">
-      <Bookmark :color="'#fff'" :width="15" :height="30"></Bookmark>
+      <Bookmark :color="color" :width="15" :height="30"></Bookmark>
     </div>
   </div>
 </template>
 
 <script>
   import Bookmark from '../common/Bookmark'
+  import { ebookMixin } from '../../utils/mixin'
+  import { getCurPx } from '../../utils/utils'
+  const WHITE = '#fff'
+  const BLUE = '#346cbc'
   export default {
+    mixins: [ebookMixin],
     data() {
       return {
-        text: this.$t('book.pulldownAddMark')
+        text: this.$t('book.pulldownAddMark'),
+        color: WHITE
+      }
+    },
+    computed: {
+      height() {
+        return getCurPx(35)
+      },
+      threshold() {
+        return getCurPx(55)
+      }
+    },
+    watch: {
+      offsetY(value) {
+        if (value >= this.height && value < this.threshold) {
+          this.$refs.bookmark.style.top = `${-value}px`
+          this.text = this.$t('book.pulldownAddMark')
+          this.color = WHITE
+        } else if (value >= this.threshold) {
+          this.$refs.bookmark.style.top = `${-value}px`
+          this.text = this.$t('book.releaseAddMark')
+          this.color = BLUE
+        }
       }
     },
     components: {
