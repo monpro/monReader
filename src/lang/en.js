@@ -126,7 +126,7 @@ const messages = {
     pulldownAddMark: 'Pull down to add bookmark',
     releaseAddMark: 'Release to add bookmark',
     pulldownDeleteMark: 'Pull down to delete bookmark',
-    releaseDeleteMark: 'Release to add bookmark',
+    releaseDeleteMark: 'Release to delete bookmark',
     selectFont: 'Select Font',
     haveRead: 'Already read $1 minutes',
     themeDefault: 'Default',

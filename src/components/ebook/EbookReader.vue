@@ -1,6 +1,11 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
+    <div class="ebook-reader-mask"
+         @click="onMaskClick"
+         @touchmove="move"
+         @touchend="moveEnd"
+    ></div>
   </div>
 </template>
 
@@ -21,6 +26,31 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      move(e) {
+        if (this.firstOffsetY) {
+          const offsetY = e.changedTouches[0].clientY - this.firstOffsetY
+          this.setOffsetY(offsetY)
+        } else {
+          this.firstOffsetY = e.changedTouches[0].clientY
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      moveEnd(e) {
+        this.setOffsetY(0)
+        this.firstOffsetY = null
+      },
+      onMaskClick(e) {
+        const offsetX = e.offsetX
+        const width = window.innerWidth
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage()
+        } else if (offsetX > 0 && offsetX > width * 0.7) {
+          this.nextPage()
+        } else {
+          this.toggleTitleAndMenu()
+        }
+      },
       prevPage() {
         if (this.rendition) {
           this.rendition.prev().then(() => {
@@ -166,5 +196,13 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    &-mask {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
   }
 </style>
