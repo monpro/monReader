@@ -1,7 +1,7 @@
 <template>
   <div class="ebook-bookmark" ref="bookmark">
     <div class="ebook-bookmark-text-wrapper">
-      <div class="ebook-bookmark-down-wrapper">
+      <div class="ebook-bookmark-down-wrapper" ref="bookmarkIconDown">
         <span class="icon-down"></span>
       </div>
       <div class="ebook-bookmark-text">
@@ -39,13 +39,55 @@
     watch: {
       offsetY(value) {
         if (value >= this.height && value < this.threshold) {
-          this.$refs.bookmark.style.top = `${-value}px`
+          this.beforeThreshold(value)
+        } else if (value >= this.threshold) {
+          this.afterThreshold(value)
+        } else if (value > 0 && value < this.height) {
+          this.beforeHeight()
+        } else if (value === 0) {
+          this.restore()
+        }
+      }
+    },
+    methods: {
+      restore() {
+        setTimeout(() => {
+          this.$refs.bookmark.style.top = `${-this.height}px`
+          this.$refs.bookmarkIconDown.style.transform = 'rotate(0deg)'
+        }, 200)
+      },
+      beforeHeight() {
+        if (this.isBookmark) {
+          this.text = this.$t('book.pulldownDeleteMark')
+          this.color = BLUE
+        } else {
           this.text = this.$t('book.pulldownAddMark')
           this.color = WHITE
-        } else if (value >= this.threshold) {
-          this.$refs.bookmark.style.top = `${-value}px`
+        }
+      },
+      beforeThreshold(value) {
+        this.$refs.bookmark.style.top = `${-value}px`
+        this.beforeHeight()
+        const bookmarkIconDown = this.$refs.bookmarkIconDown
+        if (bookmarkIconDown.style.transform === 'rotate(180deg)') {
+          bookmarkIconDown.style.transform = 'rotate(0deg)'
+        }
+      },
+      afterThreshold(value) {
+        this.$refs.bookmark.style.top = `${-value}px`
+        if (this.isBookmark) {
+          this.text = this.$t('book.releaseDeleteMark')
+          this.color = WHITE
+        } else {
           this.text = this.$t('book.releaseAddMark')
           this.color = BLUE
+        }
+        this.text = this.$t('book.releaseAddMark')
+        this.color = BLUE
+        const bookmarkIconDown = this.$refs.bookmarkIconDown
+        const transform = bookmarkIconDown.style.transform
+        if (transform === '' || transform === 'rotate(0deg)') {
+          bookmarkIconDown.style.transform = 'rotate(180deg)'
         }
       }
     },
