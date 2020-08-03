@@ -8,7 +8,7 @@
         {{text}}
       </div>
     </div>
-    <div class="ebook-bookmark-icon-wrapper">
+    <div class="ebook-bookmark-icon-wrapper" :style="isFixed ? fixedStyle: {}">
       <Bookmark :color="color" :width="15" :height="30"></Bookmark>
     </div>
   </div>
@@ -25,7 +25,8 @@
     data() {
       return {
         text: this.$t('book.pulldownAddMark'),
-        color: WHITE
+        color: WHITE,
+        isFixed: false
       }
     },
     computed: {
@@ -34,10 +35,20 @@
       },
       threshold() {
         return getCurPx(55)
+      },
+      fixedStyle() {
+        return {
+          position: 'fixed',
+          top: 0,
+          right: `${(window.innerWidth - this.$refs.bookmark.clientWidth) / 2}px`
+        }
       }
     },
     watch: {
       offsetY(value) {
+        if (!this.bookAvailable || this.menuVisible || this.settingVisible > 0) {
+          return
+        }
         if (value >= this.height && value < this.threshold) {
           this.beforeThreshold(value)
         } else if (value >= this.threshold) {
@@ -54,15 +65,22 @@
         setTimeout(() => {
           this.$refs.bookmark.style.top = `${-this.height}px`
           this.$refs.bookmarkIconDown.style.transform = 'rotate(0deg)'
+          if (this.isFixed) {
+            this.setIsBookmark(true)
+          } else {
+            this.setIsBookmark(false)
+          }
         }, 200)
       },
       beforeHeight() {
         if (this.isBookmark) {
           this.text = this.$t('book.pulldownDeleteMark')
           this.color = BLUE
+          this.isFixed = true
         } else {
           this.text = this.$t('book.pulldownAddMark')
           this.color = WHITE
+          this.isFixed = false
         }
       },
       beforeThreshold(value) {
@@ -78,12 +96,12 @@
         if (this.isBookmark) {
           this.text = this.$t('book.releaseDeleteMark')
           this.color = WHITE
+          this.isFixed = false
         } else {
           this.text = this.$t('book.releaseAddMark')
           this.color = BLUE
+          this.isFixed = true
         }
-        this.text = this.$t('book.releaseAddMark')
-        this.color = BLUE
         const bookmarkIconDown = this.$refs.bookmarkIconDown
         const transform = bookmarkIconDown.style.transform
         if (transform === '' || transform === 'rotate(0deg)') {
