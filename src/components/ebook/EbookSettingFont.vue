@@ -67,7 +67,7 @@
     position: absolute;
     bottom: pxToRem(48);
     left: 0;
-    z-index: 190;
+    z-index: 200;
     display: flex;
     flex-direction: column;
     width: 100%;

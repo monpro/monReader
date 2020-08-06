@@ -5,6 +5,9 @@
          @click="onMaskClick"
          @touchmove="move"
          @touchend="moveEnd"
+         @mousedown.left="onMouseEnter"
+         @mousemove.left="onMouseMove"
+         @mouseup.left="onMouseEnd"
     ></div>
   </div>
 </template>
@@ -26,6 +29,45 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      // 1 - first time mouse enter
+      // 2 - mouse enter then move
+      // 3 - mouse leave from move
+      // 4 - restore mouse
+      onMouseEnter(e) {
+        this.mouseMove = 1
+        this.mouseStartTime = e.timeStamp
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseMove(e) {
+        if (this.mouseMove === 1) {
+          this.mouseMove = 2
+        } else if (this.mouseMove === 2) {
+          let offsetY = 0
+          if (this.firstOffsetY) {
+            offsetY = e.clientY - this.firstOffsetY
+            this.setOffsetY(offsetY)
+          } else {
+            this.firstOffsetY = e.clientY
+          }
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      onMouseEnd(e) {
+        if (this.mouseMove === 2) {
+          this.setOffsetY(0)
+          this.firstOffsetY = 0
+          this.mouseMove = 3
+        }
+        this.mouseEndTime = e.timeStamp
+        const time = this.mouseEndTime - this.mouseStartTime
+        if (time < 200) {
+          this.mouseMove = 4
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      },
       move(e) {
         if (this.firstOffsetY) {
           const offsetY = e.changedTouches[0].clientY - this.firstOffsetY
@@ -41,6 +83,9 @@
         this.firstOffsetY = null
       },
       onMaskClick(e) {
+        if (this.mouseMove === 2 || this.mouseMove === 3) {
+          return
+        }
         const offsetX = e.offsetX
         const width = window.innerWidth
         if (offsetX > 0 && offsetX < width * 0.3) {
@@ -50,6 +95,7 @@
         } else {
           this.toggleTitleAndMenu()
         }
+        this.mouseMove = 4
       },
       prevPage() {
         if (this.rendition) {
