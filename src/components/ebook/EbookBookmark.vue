@@ -59,6 +59,14 @@
         } else if (value === 0) {
           this.restore()
         }
+      },
+      isBookmark(bookmark) {
+        this.isFixed = bookmark
+        if (bookmark) {
+          this.color = BLUE
+        } else {
+          this.color = WHITE
+        }
       }
     },
     methods: {
@@ -82,6 +90,13 @@
         })
       },
       removeBookMark() {
+        const currentLocation = this.currentBook.rendition.currentLocation()
+        const cfi = currentLocation.start.cfi
+        this.bookmark = getBookmark(this.fileName)
+        if (this.bookmark) {
+          saveBookmark(this.fileName, this.bookmark.filter(item => item.cfi !== cfi))
+        }
+        this.setIsBookmark(false)
       },
       restore() {
         setTimeout(() => {
