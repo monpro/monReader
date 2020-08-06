@@ -18,6 +18,7 @@
   import Bookmark from '../common/Bookmark'
   import { ebookMixin } from '../../utils/mixin'
   import { getCurPx } from '../../utils/utils'
+  import { getBookmark, saveBookmark } from '../../utils/localStorage'
   const WHITE = '#fff'
   const BLUE = '#346cbc'
   export default {
@@ -58,17 +59,55 @@
         } else if (value === 0) {
           this.restore()
         }
+      },
+      isBookmark(bookmark) {
+        this.isFixed = bookmark
+        if (bookmark) {
+          this.color = BLUE
+        } else {
+          this.color = WHITE
+        }
       }
     },
     methods: {
+      addBookMark() {
+        this.bookmark = getBookmark(this.fileName)
+        if (!this.bookmark) {
+          this.bookmark = []
+        }
+        const currentLocation = this.currentBook.rendition.currentLocation()
+        const cfiFile = currentLocation.start.cfi.replace(/!.*/, '')
+        const cfiStart = currentLocation.start.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        const cfiEnd = currentLocation.end.cfi.replace(/.*!/, '').replace(/\)$/, '')
+        const cfiRange = `${cfiFile}!,${cfiStart},${cfiEnd})`
+        this.currentBook.getRange(cfiRange).then(range => {
+          const text = range.toString().replace(/\s\s/g, '')
+          this.bookmark.push({
+            cfi: currentLocation.start.cfi,
+            text: text
+          })
+          saveBookmark(this.fileName, this.bookmark)
+        })
+      },
+      removeBookMark() {
+        const currentLocation = this.currentBook.rendition.currentLocation()
+        const cfi = currentLocation.start.cfi
+        this.bookmark = getBookmark(this.fileName)
+        if (this.bookmark) {
+          saveBookmark(this.fileName, this.bookmark.filter(item => item.cfi !== cfi))
+        }
+        this.setIsBookmark(false)
+      },
       restore() {
         setTimeout(() => {
           this.$refs.bookmark.style.top = `${-this.height}px`
           this.$refs.bookmarkIconDown.style.transform = 'rotate(0deg)'
           if (this.isFixed) {
             this.setIsBookmark(true)
+            this.addBookMark()
           } else {
             this.setIsBookmark(false)
+            this.removeBookMark()
           }
         }, 200)
       },

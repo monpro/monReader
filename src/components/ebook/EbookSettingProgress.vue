@@ -36,18 +36,6 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   export default {
-    computed: {
-      getSectionName() {
-        if (this.section) {
-          const section = this.currentBook.section(this.section)
-          if (section && section.href && this.currentBook && this.currentBook.navigation) {
-            // return this.currentBook.navigation.get(section.href).label
-            return this.navigation[this.section].label
-          }
-        }
-        return ''
-      }
-    },
     mixins: [ebookMixin],
     methods: {
       onProgressChange(progress) {

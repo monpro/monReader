@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
     <ebook-title></ebook-title>
+    <ebook-header></ebook-header>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
     <ebook-bookmark></ebook-bookmark>
+    <ebook-footer></ebook-footer>
   </div>
 </template>
 
@@ -12,11 +14,15 @@
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
   import EbookBookmark from '../../components/ebook/EbookBookmark'
+  import EbookHeader from '../../components/ebook/EbookHeader'
+  import EbookFooter from '../../components/ebook/EbookFooter'
   import { ebookMixin } from '../../utils/mixin'
   import { getReadTime, saveReadTime } from '../../utils/localStorage'
   export default {
     mixins: [ebookMixin],
     components: {
+      EbookHeader,
+      EbookFooter,
       EbookReader,
       EbookTitle,
       EbookMenu,
