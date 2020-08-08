@@ -135,3 +135,12 @@ export const ebookMixin = {
     }
   }
 }
+
+export const libraryMixin = {
+  computed: {
+    ...mapGetters(['offsetY'])
+  },
+  methods: {
+    ...mapActions(['setOffsetY'])
+  }
+}
