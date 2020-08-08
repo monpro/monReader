@@ -49,7 +49,7 @@
               :class="{'selected': section === index}"
               :style="getItemStyle(item)"
               @click="displayAndHideTitle(item.href)">{{item.label}}</span>
-        <span class="slide-contents-item-page"></span>
+        <span class="slide-contents-item-page">{{item.page}}</span>
       </div>
     </Scroll>
     <Scroll class="slide-search-list"
@@ -239,6 +239,9 @@
           @include ellipsis;
         }
         .slide-contents-item-page {
+          flex: 0 0 pxToRem(30);
+          font-size: pxToRem(10);
+          @include right;
         }
       }
     }
