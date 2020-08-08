@@ -1,7 +1,7 @@
 <template>
   <div class="library-home">
     <search-bar></search-bar>
-    <scroll :top="94" @onScroll="onScroll">
+    <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
       <div>11111111</div>
       <div>11111111</div>
       <div>11111111</div>
@@ -38,6 +38,17 @@
     methods: {
       onScroll(offsetY) {
         this.setOffsetY(offsetY)
+        if (offsetY > 0) {
+          this.scrollTop = 52
+        } else {
+          this.scrollTop = 94
+        }
+        this.$refs.scroll.refresh()
+      }
+    },
+    data() {
+      return {
+        scrollTop: 94
       }
     }
   }
