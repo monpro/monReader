@@ -1,12 +1,16 @@
 <template>
   <div class="library-home">
-    123
+    <search-bar></search-bar>
   </div>
 </template>
 
 <script>
+  import SearchBar from '../../components/home/SearchBar'
+
   export default {
-    name: 'LibraryHome'
+    components: {
+      SearchBar
+    }
   }
 </script>
 
