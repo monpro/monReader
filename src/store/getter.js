@@ -18,7 +18,8 @@ const book = {
   pagelist: state => state.book.pagelist,
   offsetY: state => state.book.offsetY,
   isBookmark: state => state.book.isBookmark,
-  hotSearchOffsetY: state => state.library.hotSearchOffsetY
+  hotSearchOffsetY: state => state.library.hotSearchOffsetY,
+  flapCardVisible: state => state.library.flapCardVisible
 }
 
 export default book
