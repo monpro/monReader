@@ -1,11 +1,14 @@
 <template>
   <div class="flap-card-wrapper" v-show="flapCardVisible">
-    <div class="flap-card-bg" :class="{'animation': isAnimationStart}">
+    <div class="flap-card-bg" :class="{'animation': showAnimation}">
       <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
         <div class="flap-card-circle">
           <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')" ref="left"></div>
           <div class="flap-card-semi-circle flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')" ref="right"></div>
         </div>
+      </div>
+      <div class="point-wrapper">
+        <div class="point" :class = "{'animation': showPointAnimation}" v-for="item in pointList" :key="item"></div>
       </div>
     </div>
     <div class="close-btn-wrapper" @click="close">
@@ -81,7 +84,10 @@
         front: 0,
         back: 1,
         interval: 25,
-        isAnimationStart: false
+        showAnimation: false,
+        showPointAnimation: false,
+        pointList: null,
+        showFlapCard: true
       }
     },
     watch: {
@@ -171,6 +177,13 @@
         this.intervalTask = setInterval(() => {
           this.rotateFlapCard()
         }, this.interval)
+        setTimeout(() => {
+          this.showFlapCard = false
+          this.showAnimation = false
+          if (this.intervalTask) {
+            clearInterval(this.intervalTask)
+          }
+        }, 2500)
       },
       restoreFlapCard() {
         if (this.intervalTask) {
@@ -186,11 +199,24 @@
          this.rotate(index, 'back')
         })
       },
+      startPointAnimation() {
+        this.showPointAnimation = true
+        setTimeout(() => {
+          this.showPointAnimation = false
+        }, 750)
+      },
       startAnimation() {
-        this.isAnimationStart = true
+        this.showAnimation = true
         setTimeout(() => {
           this.startRotateFlapCard()
+          this.startPointAnimation()
         }, 300)
+      }
+    },
+    created() {
+      this.pointList = []
+      for (let i = 0; i < 18; i++) {
+        this.pointList.push(`point_${i}`)
       }
     }
   }
@@ -198,6 +224,7 @@
 
 <style lang="scss" rel="stylesheet/scss" scoped>
   @import "../../assets/styles/global";
+  @import "../../assets/styles/flapCard";
   .flap-card-wrapper {
     @include absCenter;
     width: 100%;
@@ -212,7 +239,7 @@
       border-radius: pxToRem(5);
       background: white;
       &.animation {
-        animation: flap-card-jump .3s ease-in ;
+        animation: flap-card-jump .3s ease-in;
       }
       @keyframes flap-card-jump {
         0% {
@@ -256,6 +283,21 @@
               border-radius: 0 pxToRem(24) pxToRem(24) 0;
               background-position: center left;
               transform-origin: left;
+            }
+          }
+        }
+      }
+      .point-wrapper {
+        z-index: 2000;
+        @include absCenter;
+        .point {
+          border-radius: 50%;
+          @include absCenter;
+          &.animation {
+            @for $i from 1 to length($moves) {
+              &:nth-child(#{$i}) {
+                @include move($i)
+              }
             }
           }
         }
