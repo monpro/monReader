@@ -3,8 +3,8 @@
     <div class="flap-card-bg">
       <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
         <div class="flap-card-circle">
-          <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')"></div>
-          <div class="flap-card-semi-circle flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')"></div>
+          <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')" ref="left"></div>
+          <div class="flap-card-semi-circle flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')" ref="right"></div>
         </div>
       </div>
     </div>
@@ -19,18 +19,6 @@
 
   export default {
     mixins: [libraryMixin],
-    methods: {
-      close() {
-        this.setFlapCardVisible(false)
-      },
-      semiCircleStyle(item, direction) {
-        return {
-          backgroundColor: `rgba(${item.r}, ${item.g}, ${item.b})`,
-          backgroundSize: item.backgroundSize,
-          backgroundImage: direction === 'left' ? item.imgLeft : item.imgRight
-        }
-      }
-    },
     data() {
       return {
         flapCardList: [
@@ -89,8 +77,95 @@
             zIndex: 96,
             rotateDegree: 0
           }
-        ]
+        ],
+        front: 0,
+        back: 1,
+        interval: 25
       }
+    },
+    methods: {
+      close() {
+        this.setFlapCardVisible(false)
+      },
+      semiCircleStyle(item, direction) {
+        return {
+          backgroundColor: `rgba(${item.r}, ${item.g}, ${item.b})`,
+          backgroundSize: item.backgroundSize,
+          backgroundImage: direction === 'left' ? item.imgLeft : item.imgRight
+        }
+      },
+      rotate(index, type) {
+        const item = this.flapCardList[index]
+        let dom
+        if (type === 'front') {
+          dom = this.$refs.right[index]
+        } else {
+          dom = this.$refs.left[index]
+        }
+        dom.style.transform = `rotateY(${item.rotateDegree}deg)`
+        dom.style.backgroundColor = `rgb(${item.r}, ${item._g}, ${item.b})`
+      },
+      rotateFlapCard() {
+        const frontCard = this.flapCardList[this.front]
+        const backCard = this.flapCardList[this.back]
+        frontCard.rotateDegree += 10
+        frontCard._g -= 5
+        backCard.rotateDegree -= 10
+        if (backCard.rotateDegree < 90) {
+          backCard._g += 5
+        }
+        if (frontCard.rotateDegree === 90 && backCard.rotateDegree === 90) {
+          backCard.zIndex += 2
+        }
+        this.rotate(this.front, 'front')
+        this.rotate(this.back, 'back')
+        if (frontCard.rotateDegree === 180 && backCard.rotateDegree === 0) {
+          this.nextCard()
+        }
+      },
+      restoreBackCard() {
+        const backCard = this.flapCardList[this.back]
+        backCard.rotateDegree = 180
+        backCard._g = backCard.g - 5 * 9
+        this.rotate(this.back, 'back')
+      },
+      nextCard() {
+        const frontCard = this.flapCardList[this.front]
+        const backCard = this.flapCardList[this.back]
+        frontCard.rotateDegree = 0
+        frontCard._g = frontCard.g
+        backCard.rotateDegree = 0
+        backCard._g = backCard.g
+        this.rotate(this.front, 'front')
+        this.rotate(this.back, 'back')
+        this.front += 1
+        this.back += 1
+        const length = this.flapCardList.length
+        if (this.front >= length) {
+          this.front = 0
+        }
+        if (this.back >= length) {
+          this.back = 0
+        }
+        // zIndex
+        // 100 -  96
+        // 99 - 100
+        // 98 - 99
+        // front = 1
+        this.flapCardList.forEach((item, index) => {
+          item.zIndex = 100 - ((index - this.front + length) % length)
+        })
+        this.restoreBackCard()
+      },
+      startRotateFlapCard() {
+        this.restoreBackCard()
+        setInterval(() => {
+          this.rotateFlapCard()
+        }, this.interval)
+      }
+    },
+    mounted() {
+      this.startRotateFlapCard()
     }
   }
 </script>
@@ -124,13 +199,16 @@
             width: 50%;
             height: 100%;
             background-repeat: no-repeat;
+            backface-visibility: hidden;
             &-left {
               border-radius: pxToRem(24) 0 0 pxToRem(24);
               background-position: center right;
+              transform-origin: right;
             }
             &-right {
               border-radius: 0 pxToRem(24) pxToRem(24) 0;
               background-position: center left;
+              transform-origin: left;
             }
           }
         }
