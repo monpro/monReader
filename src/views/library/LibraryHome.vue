@@ -1,6 +1,7 @@
 <template>
   <div class="library-home">
     <search-bar></search-bar>
+    <flap-card></flap-card>
     <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
       <div>11111111</div>
       <div>11111111</div>
@@ -27,13 +28,15 @@
 <script>
   import SearchBar from '../../components/home/SearchBar'
   import Scroll from '../../components/common/Scroll'
+  import FlapCard from '../../components/home/FlapCard'
   import { libraryMixin } from '../../utils/mixin'
 
   export default {
     mixins: [libraryMixin],
     components: {
       SearchBar,
-      Scroll
+      Scroll,
+      FlapCard
     },
     methods: {
       onScroll(offsetY) {

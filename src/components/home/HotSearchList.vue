@@ -28,7 +28,7 @@
     },
     data() {
       return {
-        searchList: {
+        df: {
           hotSearch: [
             {
               type: 1,
