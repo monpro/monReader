@@ -83,8 +83,16 @@
         interval: 25
       }
     },
+    watch: {
+      flapCardVisible(value) {
+        if (value) {
+          this.startRotateFlapCard()
+        }
+      }
+    },
     methods: {
       close() {
+        this.restoreFlapCard()
         this.setFlapCardVisible(false)
       },
       semiCircleStyle(item, direction) {
@@ -159,13 +167,24 @@
       },
       startRotateFlapCard() {
         this.restoreBackCard()
-        setInterval(() => {
+        this.intervalTask = setInterval(() => {
           this.rotateFlapCard()
         }, this.interval)
+      },
+      restoreFlapCard() {
+        if (this.intervalTask) {
+          clearInterval(this.intervalTask)
+        }
+        this.front = 0
+        this.back = 1
+        this.flapCardList.forEach((item, index) => {
+         item.zIndex = 100 - index
+         item._g = item.g
+         item.rotateDegree = 0
+         this.rotate(index, 'front')
+         this.rotate(index, 'back')
+        })
       }
-    },
-    mounted() {
-      this.startRotateFlapCard()
     }
   }
 </script>
