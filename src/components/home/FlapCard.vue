@@ -1,6 +1,6 @@
 <template>
   <div class="flap-card-wrapper" v-show="flapCardVisible">
-    <div class="flap-card-bg">
+    <div class="flap-card-bg" :class="{'animation': isAnimationStart}">
       <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
         <div class="flap-card-circle">
           <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')" ref="left"></div>
@@ -80,13 +80,14 @@
         ],
         front: 0,
         back: 1,
-        interval: 25
+        interval: 25,
+        isAnimationStart: false
       }
     },
     watch: {
       flapCardVisible(value) {
         if (value) {
-          this.startRotateFlapCard()
+          this.startAnimation()
         }
       }
     },
@@ -184,6 +185,12 @@
          this.rotate(index, 'front')
          this.rotate(index, 'back')
         })
+      },
+      startAnimation() {
+        this.isAnimationStart = true
+        setTimeout(() => {
+          this.startRotateFlapCard()
+        }, 300)
       }
     }
   }
@@ -204,6 +211,27 @@
       height: pxToRem(64);
       border-radius: pxToRem(5);
       background: white;
+      &.animation {
+        animation: flap-card-jump .3s ease-in ;
+      }
+      @keyframes flap-card-jump {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+        75% {
+          transform: scale(.8);
+          opacity: 1;
+        }
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
       .flap-card {
         width: pxToRem(48);
         height: pxToRem(48);
