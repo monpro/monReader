@@ -1,7 +1,7 @@
 <template>
   <div class="library-home">
     <search-bar></search-bar>
-    <flap-card></flap-card>
+    <flap-card :bookData="randomBook"></flap-card>
     <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
       <div>11111111</div>
       <div>11111111</div>
@@ -30,6 +30,7 @@
   import Scroll from '../../components/common/Scroll'
   import FlapCard from '../../components/home/FlapCard'
   import { libraryMixin } from '../../utils/mixin'
+  import { home } from '../../api/store'
 
   export default {
     mixins: [libraryMixin],
@@ -51,8 +52,20 @@
     },
     data() {
       return {
-        scrollTop: 94
+        scrollTop: 94,
+        randomBook: null
       }
+    },
+    mounted() {
+      home().then(response => {
+        if (response && response.status === 200) {
+          const data = response.data
+          const index = Math.floor(Math.random() * data.random.length)
+          const randomData = data.random[index]
+          this.randomBook = randomData
+          console.log(randomData)
+        }
+      })
     }
   }
 </script>

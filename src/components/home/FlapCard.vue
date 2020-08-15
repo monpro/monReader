@@ -22,6 +22,9 @@
 
   export default {
     mixins: [libraryMixin],
+    props: {
+      bookData: Object
+    },
     data() {
       return {
         flapCardList: [
