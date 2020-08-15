@@ -8,3 +8,5 @@ Mock.mock(/\/book\/home/, 'get', home)
 Mock.mock(/\/book\/shelf/, 'get', shelf)
 Mock.mock(/\/book\/list/, 'get', list)
 Mock.mock(/\/book\/flat-list/, 'get', flatList)
+
+export default Mock
