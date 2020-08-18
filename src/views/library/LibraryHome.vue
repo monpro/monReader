@@ -6,6 +6,7 @@
       <div class="banner-wrapper">
         <div class="banner-img" :style="{backgroundImage: `url('${banner}')`}"></div>
       </div>
+      <guess-book :data="guessBook"></guess-book>
     </scroll>
   </div>
 </template>
@@ -16,10 +17,12 @@
   import FlapCard from '../../components/home/FlapCard'
   import { libraryMixin } from '../../utils/mixin'
   import { home } from '../../api/store'
+  import GuessBook from '../../components/home/GuessBook'
 
   export default {
     mixins: [libraryMixin],
     components: {
+      GuessBook,
       SearchBar,
       Scroll,
       FlapCard
@@ -39,7 +42,8 @@
       return {
         scrollTop: 94,
         randomBook: null,
-        banner: null
+        banner: null,
+        guessBook: null
       }
     },
     mounted() {
@@ -50,6 +54,8 @@
           const randomData = data.random[index]
           this.randomBook = randomData
           this.banner = data.banner
+          this.guessBook = data.guessYouLike
+          console.log(this.guessBook)
         }
       })
     }
