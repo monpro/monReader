@@ -3,24 +3,9 @@
     <search-bar></search-bar>
     <flap-card :bookData="randomBook"></flap-card>
     <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
-      <div>11111111</div>
+      <div class="banner-wrapper">
+        <div class="banner-img" :style="{backgroundImage: `url('${banner}')`}"></div>
+      </div>
     </scroll>
   </div>
 </template>
@@ -53,7 +38,8 @@
     data() {
       return {
         scrollTop: 94,
-        randomBook: null
+        randomBook: null,
+        banner: null
       }
     },
     mounted() {
@@ -63,7 +49,7 @@
           const index = Math.floor(Math.random() * data.random.length)
           const randomData = data.random[index]
           this.randomBook = randomData
-          console.log(randomData)
+          this.banner = data.banner
         }
       })
     }
@@ -76,5 +62,16 @@
     width: 100%;
     height: 100%;
     background: white;
+    .banner-wrapper {
+      width: 100%;
+      padding: pxToRem(10);
+      box-sizing: border-box;
+      .banner-img {
+        width: 100%;
+        height: pxToRem(150);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    }
   }
 </style>
