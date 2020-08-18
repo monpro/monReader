@@ -65,6 +65,12 @@ $animationType: linear;
   word-break: keep-all;
 }
 
+@mixin columnTop {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
 .icon {
   color: #666;
   font-size: pxToRem(15);

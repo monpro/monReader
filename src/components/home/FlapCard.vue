@@ -1,14 +1,27 @@
 <template>
   <div class="flap-card-wrapper" v-show="flapCardVisible">
-    <div class="flap-card-bg" :class="{'animation': showAnimation}">
-      <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}">
+    <div class="flap-card-bg" :class="{'animation': startFlapCardAnimation}" v-show="startFlapCardAnimation">
+      <div class="flap-card" v-for="(item, index) in flapCardList" :key="index" :style="{zIndex: item.zIndex}" v-show="startFlapCardAnimation">
         <div class="flap-card-circle">
           <div class="flap-card-semi-circle flap-card-semi-circle-left" :style="semiCircleStyle(item, 'left')" ref="left"></div>
           <div class="flap-card-semi-circle flap-card-semi-circle-right" :style="semiCircleStyle(item, 'right')" ref="right"></div>
         </div>
       </div>
       <div class="point-wrapper">
-        <div class="point" :class = "{'animation': showPointAnimation}" v-for="item in pointList" :key="item"></div>
+        <div class="point" :class = "{'animation': startPointAnimation}" v-for="item in pointList" :key="item"></div>
+      </div>
+    </div>
+    <div class="book-card" :class="{'animation': startBookCardAnimation}" v-show="startBookCardAnimation">
+      <div class="book-card-wrapper">
+        <div class="img-wrapper">
+          <img class="img" :src="bookData ? bookData.cover : ''">
+        </div>
+        <div class="content-wrapper">
+          <div class="content-title">{{bookData ? bookData.title : ''}}</div>
+          <div class="content-author sub-title-medium">{{bookData ? bookData.author : ''}}</div>
+          <div class="content-category">{{getCategoryText()}}</div>
+        </div>
+        <div class="read-btn" @click.stop="showBookDetail(data)">{{$t('home.readNow')}}</div>
       </div>
     </div>
     <div class="close-btn-wrapper" @click="close">
@@ -19,6 +32,7 @@
 
 <script>
   import { libraryMixin } from '../../utils/mixin'
+  import { getTextByCategory } from '../../utils/utils'
 
   export default {
     mixins: [libraryMixin],
@@ -87,21 +101,23 @@
         front: 0,
         back: 1,
         interval: 25,
-        showAnimation: false,
-        showPointAnimation: false,
+        startFlapCardAnimation: false,
+        startPointAnimation: false,
         pointList: null,
-        showFlapCard: true
+        showFlapCard: true,
+        startBookCardAnimation: false
       }
     },
     watch: {
       flapCardVisible(value) {
         if (value) {
-          this.startAnimation()
+          this.runAnimation()
         }
       }
     },
     methods: {
       close() {
+        this.stopAnimation()
         this.restoreFlapCard()
         this.setFlapCardVisible(false)
       },
@@ -175,18 +191,23 @@
         })
         this.restoreBackCard()
       },
-      startRotateFlapCard() {
+      stopAnimation() {
+        if (this.intervalTask) {
+          clearInterval(this.intervalTask)
+        }
+        if (this.timeoutCard) {
+          clearTimeout(this.timeoutCard)
+        }
+        if (this.timeoutBook) {
+          clearTimeout(this.timeoutBook)
+        }
+        this.restoreFlapCard()
+      },
+      runFlapCardAnimation() {
         this.restoreBackCard()
         this.intervalTask = setInterval(() => {
           this.rotateFlapCard()
         }, this.interval)
-        setTimeout(() => {
-          this.showFlapCard = false
-          this.showAnimation = false
-          if (this.intervalTask) {
-            clearInterval(this.intervalTask)
-          }
-        }, 2500)
       },
       restoreFlapCard() {
         if (this.intervalTask) {
@@ -201,19 +222,34 @@
          this.rotate(index, 'front')
          this.rotate(index, 'back')
         })
+
+        this.startFlapCardAnimation = false
+        this.startPointAnimation = false
+        this.startBookCardAnimation = false
       },
-      startPointAnimation() {
-        this.showPointAnimation = true
+      runPointAnimation() {
+        this.startPointAnimation = true
         setTimeout(() => {
-          this.showPointAnimation = false
+          this.startPointAnimation = false
         }, 750)
       },
-      startAnimation() {
-        this.showAnimation = true
-        setTimeout(() => {
-          this.startRotateFlapCard()
-          this.startPointAnimation()
+      runAnimation() {
+        this.startFlapCardAnimation = true
+        this.timeoutCard = setTimeout(() => {
+          this.runFlapCardAnimation()
+          this.runPointAnimation()
         }, 300)
+        this.timeoutBook = setTimeout(() => {
+          this.stopAnimation()
+          this.startBookCardAnimation = true
+        }, 2500)
+      },
+      getCategoryText() {
+        if (this.data) {
+          return getTextByCategory(this.data.category, this)
+        } else {
+          return ''
+        }
       }
     },
     created() {
@@ -303,6 +339,78 @@
               }
             }
           }
+        }
+      }
+    }
+    .book-card {
+      position: relative;
+      width: 65%;
+      max-width: pxToRem(400);
+      box-sizing: border-box;
+      border-radius: pxToRem(15);
+      background: white;
+      &.animation {
+        animation: scale .3s ease-in both;
+        @keyframes scale {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      }
+      .book-card-wrapper {
+        width: 100%;
+        height: 100%;
+        margin-bottom: pxToRem(30);
+        @include columnTop;
+        .img-wrapper {
+          width: 100%;
+          margin-top: pxToRem(20);
+          @include center;
+          .img {
+            width: pxToRem(90);
+            height: pxToRem(130);
+          }
+        }
+        .content-wrapper {
+          padding: 0 pxToRem(20);
+          margin-top: pxToRem(20);
+          .content-title {
+            color: #333;
+            font-weight: bold;
+            font-size: pxToRem(18);
+            line-height: pxToRem(20);
+            max-height: pxToRem(40);
+            text-align: center;
+            @include ellipsisWithHeight(2)
+          }
+          .content-author {
+            margin-top: pxToRem(10);
+            text-align: center;
+          }
+          .content-category {
+            color: #999;
+            font-size: pxToRem(14);
+            margin-top: pxToRem(10);
+            text-align: center;
+          }
+        }
+        .read-btn {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          z-index: 1100;
+          width: 100%;
+          border-radius: 0 0 pxToRem(15) pxToRem(15);
+          padding: pxToRem(15) 0;
+          text-align: center;
+          color: white;
+          font-size: pxToRem(14);
+          background: $color-blue;
         }
       }
     }
