@@ -1,0 +1,114 @@
+<template>
+  <div class="featured">
+    <title-view :label="titleText" :btn="btnText" v-if="titleVisible && data && data.length > 0"></title-view>
+    <div class="featured-list">
+      <div class="featured-item-wrapper">
+        <div class="featured-item" v-for="(item, index) in data" :key="index" @click="showBookDetail(item)">
+          <div class="img-wrapper">
+            <img class="img" :src="item.cover">
+          </div>
+          <div class="content-wrapper">
+            <div class="title title-small" ref="title">{{item.title}}</div>
+            <div class="author sub-title-tiny" ref="author">{{item.author}}</div>
+            <div class="category third-title-tiny" ref="category">{{getTextByCategory(item.category)}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import TitleView from './Title'
+  import { getCurPx, getTextByCategory } from '../../utils/utils'
+  import { libraryMixin } from '../../utils/mixin'
+
+  export default {
+    mixins: [libraryMixin],
+    components: {
+      TitleView
+    },
+    props: {
+      data: Array,
+      titleVisible: {
+        type: Boolean,
+        default: true
+      },
+      titleText: {
+        type: String
+      },
+      btnText: {
+        type: String
+      }
+    },
+    computed: {
+      width() {
+        return window.innerWidth - getCurPx(20) - getCurPx(60) + 'px'
+      }
+    },
+    methods: {
+      getTextByCategory(category) {
+        return getTextByCategory(category, this)
+      },
+      resize() {
+        this.$nextTick(() => {
+          this.$refs.title.forEach(item => {
+            item.style.width = this.width
+          })
+          this.$refs.author.forEach(item => {
+            item.style.width = this.width
+          })
+          this.$refs.category.forEach(item => {
+            item.style.width = this.width
+          })
+        })
+      }
+    }
+  }
+</script>
+
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+
+  .featured {
+    .featured-list {
+      width: 100%;
+      padding: 0 pxToRem(10);
+      box-sizing: border-box;
+      .featured-item-wrapper {
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        .featured-item {
+          flex: 0 0 50%;
+          width: 50%;
+          padding: pxToRem(5) 0;
+          @include top;
+          .img-wrapper {
+            flex: 0 0 30%;
+            width: 30%;
+            .img {
+              width: 100%;
+              // width: pxToRem(50);
+              // height: pxToRem(75);
+            }
+          }
+          .content-wrapper {
+            flex: 1;
+            width: pxToRem(117.5);
+            padding: 0 pxToRem(5);
+            box-sizing: border-box;
+            .author {
+              margin-top: pxToRem(15);
+            }
+            .category {
+              margin-top: pxToRem(5);
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
