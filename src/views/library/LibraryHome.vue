@@ -13,6 +13,7 @@
       <div class="category-list-wrapper" v-for="(item, index) in categoryList" :key="index">
         <category-book :data="item"></category-book>
       </div>
+      <category class="category" :data="categories"></category>
     </scroll>
   </div>
 </template>
@@ -27,10 +28,12 @@
   import Recommend from '../../components/home/Recommend'
   import Featured from '../../components/home/Featured'
   import CategoryBook from '../../components/home/CategoryBook'
+  import Category from '../../components/home/Category'
 
   export default {
     mixins: [libraryMixin],
     components: {
+      Category,
       CategoryBook,
       Featured,
       Recommend,
@@ -58,7 +61,8 @@
         guessBook: null,
         recommend: null,
         featured: null,
-        categoryList: null
+        categoryList: null,
+        categories: null
       }
     },
     mounted() {
@@ -73,6 +77,7 @@
           this.recommend = data.recommend
           this.featured = data.featured
           this.categoryList = data.categoryList
+          this.categories = data.categories
         }
       })
     }
@@ -96,7 +101,7 @@
         background-size: 100% 100%;
       }
     }
-    .recommend, .category-list-wrapper {
+    .recommend, .category-list-wrapper, .category {
       margin-top: pxToRem(25);
     }
   }
