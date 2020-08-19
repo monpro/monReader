@@ -8,6 +8,8 @@
       </div>
       <guess-book :data="guessBook"></guess-book>
       <recommend :data="recommend" class="recommend"></recommend>
+      <featured :data="featured" :title-text="$t('home.featured')" :btn-text="$t('home.seeAll')"
+                class="featured"></featured>
     </scroll>
   </div>
 </template>
@@ -20,10 +22,12 @@
   import { home } from '../../api/store'
   import GuessBook from '../../components/home/GuessBook'
   import Recommend from '../../components/home/Recommend'
+  import Featured from '../../components/home/Featured'
 
   export default {
     mixins: [libraryMixin],
     components: {
+      Featured,
       Recommend,
       GuessBook,
       SearchBar,
@@ -47,7 +51,8 @@
         randomBook: null,
         banner: null,
         guessBook: null,
-        recommend: null
+        recommend: null,
+        featured: null
       }
     },
     mounted() {
@@ -60,6 +65,7 @@
           this.banner = data.banner
           this.guessBook = data.guessYouLike
           this.recommend = data.recommend
+          this.featured = data.featured
           console.log(this.guessBook)
         }
       })
