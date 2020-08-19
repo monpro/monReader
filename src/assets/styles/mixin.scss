@@ -30,6 +30,12 @@ $animationType: linear;
   margin: auto;
 }
 
+@mixin top {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 @mixin left {
   display: flex;
   justify-content: flex-start;
@@ -41,6 +47,13 @@ $animationType: linear;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+}
+
+@mixin columnCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 @mixin right {

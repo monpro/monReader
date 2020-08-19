@@ -7,6 +7,7 @@
         <div class="banner-img" :style="{backgroundImage: `url('${banner}')`}"></div>
       </div>
       <guess-book :data="guessBook"></guess-book>
+      <recommend :data="recommend" class="recommend"></recommend>
     </scroll>
   </div>
 </template>
@@ -18,10 +19,12 @@
   import { libraryMixin } from '../../utils/mixin'
   import { home } from '../../api/store'
   import GuessBook from '../../components/home/GuessBook'
+  import Recommend from '../../components/home/Recommend'
 
   export default {
     mixins: [libraryMixin],
     components: {
+      Recommend,
       GuessBook,
       SearchBar,
       Scroll,
@@ -43,7 +46,8 @@
         scrollTop: 94,
         randomBook: null,
         banner: null,
-        guessBook: null
+        guessBook: null,
+        recommend: null
       }
     },
     mounted() {
@@ -55,6 +59,7 @@
           this.randomBook = randomData
           this.banner = data.banner
           this.guessBook = data.guessYouLike
+          this.recommend = data.recommend
           console.log(this.guessBook)
         }
       })
@@ -78,6 +83,9 @@
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
+    }
+    .recommend {
+      margin-top: pxToRem(25);
     }
   }
 </style>
