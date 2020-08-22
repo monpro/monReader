@@ -157,7 +157,6 @@
           width: innerWidth,
           height: innerHeight
         })
-
         const location = getLocation(this.fileName)
         this.display(location, () => {
           this.initTheme()

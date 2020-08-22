@@ -25,6 +25,14 @@ const routes = [
       {
         path: 'home',
         component: () => import('../views/library/LibraryHome.vue')
+      },
+      {
+        path: 'list',
+        component: () => import('../views/library/LibraryList')
+      },
+      {
+        path: 'detail',
+        component: () => import('../views/library/LibraryDetail')
       }
     ]
   }
