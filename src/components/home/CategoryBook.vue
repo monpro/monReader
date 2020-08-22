@@ -17,7 +17,7 @@
 
 <script type="text/ecmascript-6">
   import TitleView from './Title'
-  import { getTextByCategory, getCategoryName } from '../../utils/utils'
+  import { getTextByCategory, getCategoryNameById } from '../../utils/utils'
   import { libraryMixin } from '../../utils/mixin'
 
   export default {
@@ -33,7 +33,7 @@
         this.$router.push({
           path: '/store/list',
           query: {
-            category: getCategoryName(this.data.category),
+            category: getCategoryNameById(this.data.category),
             getTextByCategory: this.getTextByCategory(this.data.category)
           }
         })

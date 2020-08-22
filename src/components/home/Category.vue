@@ -22,7 +22,7 @@
 
 <script type="text/ecmascript-6">
   import TitleView from './Title'
-  import { getTextByCategory, getCategoryName } from '../../utils/utils'
+  import { getTextByCategory, getCategoryNameById } from '../../utils/utils'
 
   export default {
     components: {
@@ -36,7 +36,7 @@
         this.$router.push({
           path: '/store/list',
           query: {
-            category: getCategoryName(item.category),
+            category: getCategoryNameById(item.category),
             getTextByCategory: this.getTextByCategory(item.category)
           }
         })
