@@ -23,7 +23,8 @@
                  class="input"
                  :placeholder="$t('home.hint')"
                  v-model="searchText"
-                 @click="showHotSearch">
+                 @click="showHotSearch"
+                 @keyup.13.exact="search">
         </div>
       </div>
     </div>
@@ -107,6 +108,14 @@
       },
       showShadow() {
         this.shadowVisible = true
+      },
+      search() {
+        this.$router.push({
+          path: '/library/list',
+          query: {
+            keyword: this.searchText
+          }
+        })
       }
     }
   }
