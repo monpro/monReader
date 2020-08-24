@@ -6,8 +6,11 @@
 
 <script>
   import ShelfTitle from '../../components/shelf/ShelfTitle'
+  import { shelfMixin } from '../../utils/mixin'
   export default {
-    components: { ShelfTitle }
+    components: { ShelfTitle },
+    mixins: [shelfMixin]
+
   }
 </script>
 

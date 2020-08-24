@@ -14,7 +14,10 @@
 </template>
 
 <script>
+  import { shelfMixin } from '../../utils/mixin'
+
   export default {
+    mixins: [shelfMixin],
     computed: {
       selectedText() {
         return this.$t('shelf.selectBook')

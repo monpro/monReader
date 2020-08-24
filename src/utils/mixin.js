@@ -153,3 +153,22 @@ export const libraryMixin = {
     }
   }
 }
+
+export const shelfMixin = {
+  computed: {
+    ...mapGetters([
+      'isEditMode',
+      'shelfList',
+      'shelfSelected',
+      'shelfTitleVisible'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setIsEditMode',
+      'setShelfList',
+      'setShelfSelected',
+      'setShelfTitleVisible'
+    ])
+  }
+}
