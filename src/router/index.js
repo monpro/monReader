@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/library',
     component: () => import('../views/library/index.vue'),
-    redirect: '/library/home',
+    redirect: '/library/shelf',
     children: [
       {
         path: 'home',
@@ -33,6 +33,10 @@ const routes = [
       {
         path: 'detail',
         component: () => import('../views/library/LibraryDetail')
+      },
+      {
+        path: 'shelf',
+        component: () => import('../views/library/LibraryShelf')
       }
     ]
   }
