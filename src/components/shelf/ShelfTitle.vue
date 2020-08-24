@@ -1,16 +1,20 @@
 <template>
-<div class="shelf-title">
-  <div class="shelf-title-text-wrapper">
-    <span class="shelf-title-text">{{$t('shelf.title')}}</span>
-    <span class="shelf-title-sub-text">{{selectedText}}</span>
-  </div>
-  <div class="shelf-title-btn-wrapper shelf-btn-left">
-    <div class="shelf-title-btn-text">{{$t('shelf.clearCache')}}</div>
-  </div>
-  <div class="shelf-title-btn-wrapper shelf-btn-right">
-    <div class="shelf-title-btn-text">{{$t('shelf.edit')}}</div>
-  </div>
-</div>
+  <transition name="fade">
+    <div class="shelf-title" v-show="shelfTitleVisible">
+      <div class="shelf-title-text-wrapper">
+        <span class="shelf-title-text">{{$t('shelf.title')}}</span>
+        <span class="shelf-title-sub-text" v-if="isEditMode">{{selectedText}}</span>
+      </div>
+      <div class="shelf-title-btn-wrapper shelf-btn-left">
+        <div class="shelf-title-btn-text" @click="clearCache">{{$t('shelf.clearCache')}}</div>
+      </div>
+      <div class="shelf-title-btn-wrapper shelf-btn-right">
+        <div class="shelf-title-btn-text" @click="onEditClick">
+          {{isEditMode ? $t('shelf.cancel') : $t('shelf.edit')}}
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -20,7 +24,22 @@
     mixins: [shelfMixin],
     computed: {
       selectedText() {
-        return this.$t('shelf.selectBook')
+        const selectedNumber = this.shelfSelected.length
+        if (selectedNumber === 0) {
+          return this.$t('shelf.selectBook')
+        } else if (selectedNumber === 1) {
+          return this.$t('shelf.haveSelectedBook').replace('$1', selectedNumber)
+        } else {
+          return this.$t('shelf.haveSelectedBooks').replace('$1', selectedNumber)
+        }
+      }
+    },
+    methods: {
+      onEditClick() {
+        this.setIsEditMode(!this.isEditMode)
+      },
+      clearCache() {
+        console.log('clear cache')
       }
     }
   }
