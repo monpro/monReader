@@ -1,0 +1,106 @@
+<template>
+  <div class="shelf-search-wrapper">
+    <div class="shelf-search">
+      <div class="search-wrapper">
+        <div class="icon-search-wrapper">
+          <span class="icon-search icon"></span>
+        </div>
+        <div class="search-input-wrapper">
+          <input type="text" class="search-input" :placeholder="$t('shelf.search')">
+        </div>
+        <div class="icon-clear-wrapper">
+          <span class="icon-close-circle-fill"></span>
+        </div>
+      </div>
+      <div class="icon-locale-wrapper">
+        <span class="icon-cn icon"></span>
+        <span class="icon-en icon"></span>
+      </div>
+      <div class="cancel-btn-wrapper">
+        <span class="cancel-text">{{$t('shelf.cancel')}}</span>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+  export default {
+  }
+</script>
+
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import "../../assets/styles/global";
+  .shelf-search-wrapper {
+    position: relative;
+    z-index: 120;
+    width: 100%;
+    height: pxToRem(94);
+    font-size: pxToRem(16);
+    background: white;
+    .shelf-search {
+      position: absolute;
+      top: pxToRem(42);
+      z-index: 120;
+      left: 0;
+      width: 100%;
+      height: pxToRem(52);
+      display: flex;
+      .search-wrapper {
+        flex: 1;
+        display: flex;
+        margin: pxToRem(8) 0 pxToRem(8) pxToRem(10);
+        border: pxToRem(1) solid #ccc;
+        border-radius: pxToRem(3);
+        .icon-search-wrapper {
+          flex: 0 0 pxToRem(22);
+          @include right;
+          .icon-search {
+            font-size: pxToRem(14);
+          }
+        }
+        .search-input-wrapper {
+          flex: 1;
+          padding: 0 pxToRem(10);
+          box-sizing: border-box;
+          .search-input {
+            width: 100%;
+            font-size: pxToRem(14);
+            border: none;
+            color: #333;
+            &:focus {
+              outline: none;
+            }
+            &::-webkit-input-placeholder {
+              font-size: pxToRem(14);
+              color: #ccc;
+            }
+          }
+        }
+        .icon-clear-wrapper {
+          flex: 0 0 pxToRem(24);
+          .icon-close-circle-fill {
+            font-size: pxToRem(14);
+            color: #ccc;
+          }
+        }
+      }
+      .icon-locale-wrapper {
+        flex: 0 0 pxToRem(55);
+        @include center;
+        .icon-cn .icon-en {
+          font-size: pxToRem(22);
+          color: #666;
+        }
+      }
+      .cancel-btn-wrapper {
+        flex: 0 0 pxToRem(55);
+        @include center;
+        .cancel-text {
+          font-size: pxToRem(14);
+          color: $color-blue;
+        }
+      }
+    }
+  }
+</style>

@@ -49,7 +49,7 @@
   @import "../../assets/styles/global";
   .shelf-title {
     position: relative;
-    z-index: 130;
+    z-index: 200;
     width: 100%;
     height: pxToRem(42);
     background: white;
