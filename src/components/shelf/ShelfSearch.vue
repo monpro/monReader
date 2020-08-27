@@ -6,17 +6,21 @@
           <span class="icon-search icon"></span>
         </div>
         <div class="search-input-wrapper">
-          <input type="text" class="search-input" :placeholder="$t('shelf.search')">
+          <input
+            type="text"
+            class="search-input"
+            @click="onSearchClick"
+            :placeholder="$t('shelf.search')">
         </div>
         <div class="icon-clear-wrapper">
           <span class="icon-close-circle-fill"></span>
         </div>
       </div>
-      <div class="icon-locale-wrapper">
-        <span class="icon-cn icon"></span>
-        <span class="icon-en icon"></span>
+      <div class="icon-locale-wrapper" v-if="!inputClicked" @click="switchLocale">
+        <span class="icon-cn icon" v-if="lang === 'cn'"></span>
+        <span class="icon-en icon" v-else></span>
       </div>
-      <div class="cancel-btn-wrapper">
+      <div class="cancel-btn-wrapper" @click="onCancelClick">
         <span class="cancel-text">{{$t('shelf.cancel')}}</span>
       </div>
     </div>
@@ -25,7 +29,35 @@
 </template>
 
 <script>
+  import { setLocalStorage } from '../../utils/localStorage'
+
   export default {
+    computed: {
+      lang() {
+        return this.$i18n.locale
+      }
+    },
+    data() {
+      return {
+        inputClicked: false
+      }
+    },
+    methods: {
+      onSearchClick() {
+        this.inputClicked = true
+      },
+      onCancelClick() {
+        this.inputClicked = false
+      },
+      switchLocale() {
+        if (this.lang === 'en') {
+          this.$i18n.locale = 'cn'
+        } else {
+          this.$i18n.locale = 'en'
+        }
+        setLocalStorage('locale', this.$i18n.locale)
+      }
+    }
   }
 </script>
 
@@ -52,6 +84,7 @@
         margin: pxToRem(8) 0 pxToRem(8) pxToRem(10);
         border: pxToRem(1) solid #ccc;
         border-radius: pxToRem(3);
+        @include center;
         .icon-search-wrapper {
           flex: 0 0 pxToRem(22);
           @include right;
