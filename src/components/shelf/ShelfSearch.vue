@@ -1,6 +1,6 @@
 <template>
   <div class="shelf-search-wrapper">
-    <div class="shelf-search">
+    <div class="shelf-search" :class="{'search-top': inputClicked}">
       <div class="search-wrapper">
         <div class="icon-search-wrapper">
           <span class="icon-search icon"></span>
@@ -9,10 +9,11 @@
           <input
             type="text"
             class="search-input"
+            v-model="searchText"
             @click="onSearchClick"
             :placeholder="$t('shelf.search')">
         </div>
-        <div class="icon-clear-wrapper">
+        <div class="icon-clear-wrapper" v-show="searchText.length > 0" @click="clearSearchText">
           <span class="icon-close-circle-fill"></span>
         </div>
       </div>
@@ -24,14 +25,15 @@
         <span class="cancel-text">{{$t('shelf.cancel')}}</span>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
+  import { shelfMixin } from '../../utils/mixin'
   import { setLocalStorage } from '../../utils/localStorage'
 
   export default {
+    mixins: [shelfMixin],
     computed: {
       lang() {
         return this.$i18n.locale
@@ -39,15 +41,18 @@
     },
     data() {
       return {
-        inputClicked: false
+        inputClicked: false,
+        searchText: ''
       }
     },
     methods: {
       onSearchClick() {
         this.inputClicked = true
+        this.setShelfTitleVisible(false)
       },
       onCancelClick() {
         this.inputClicked = false
+        this.setShelfTitleVisible(true)
       },
       switchLocale() {
         if (this.lang === 'en') {
@@ -56,6 +61,9 @@
           this.$i18n.locale = 'en'
         }
         setLocalStorage('locale', this.$i18n.locale)
+      },
+      clearSearchText() {
+        this.searchText = ''
       }
     }
   }
@@ -78,6 +86,10 @@
       width: 100%;
       height: pxToRem(52);
       display: flex;
+      transition: top .2s linear;
+      &.search-top {
+        top: 0;
+      }
       .search-wrapper {
         flex: 1;
         display: flex;
