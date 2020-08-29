@@ -1,5 +1,5 @@
 <template>
-  <div class="shelf-search-wrapper">
+  <div class="shelf-search-wrapper" :class="{'search-top': inputClicked, 'hide-shadow': hideShadow}">
     <div class="shelf-search" :class="{'search-top': inputClicked}">
       <div class="search-wrapper">
         <div class="icon-search-wrapper">
@@ -71,7 +71,13 @@
       return {
         inputClicked: false,
         searchText: '',
-        selectedTable: 1
+        selectedTable: 1,
+        hideShadow: true
+      }
+    },
+    watch: {
+      offsetY(offsetY) {
+        this.hideShadow = offsetY > 0
       }
     },
     methods: {
@@ -110,6 +116,15 @@
     height: pxToRem(94);
     font-size: pxToRem(16);
     background: white;
+    box-shadow: 0 pxToRem(2) pxToRem(2) 0 rgba(0, 0, 0, .1);
+    &.hide-shadow {
+      box-shadow: none;
+    }
+    &.search-top {
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
     .shelf-search {
       position: absolute;
       top: pxToRem(42);
