@@ -1,6 +1,6 @@
 <template>
-  <div class="shelf-item">
-    <component :is="item"></component>
+  <div class="shelf-item item-shadow">
+    <component :is="item" :data="data"></component>
   </div>
 </template>
 
@@ -41,6 +41,8 @@
   .shelf-item {
     width: 100%;
     height: 100%;
-    background-color: red;
+    &.item-shadow {
+      box-shadow: pxToRem(2) pxToRem(2) pxToRem(6) pxToRem(2) rgba(200, 200, 200, .3);
+    }
   }
 </style>
