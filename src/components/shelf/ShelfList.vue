@@ -1,39 +1,18 @@
 <template>
   <div class="shelf-list">
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
-    <div>sdfsd</div>
+    <div v-for="item in shelfList" :key="item.id">
+      <shelf-item :data="item"></shelf-item>
+    </div>
   </div>
-
 </template>
 
 <script>
+  import { shelfMixin } from '../../utils/mixin'
+  import ShelfItem from './ShelfItem'
+
   export default {
-    name: 'ShelfList'
+    components: { ShelfItem },
+    mixins: [shelfMixin]
   }
 </script>
 
